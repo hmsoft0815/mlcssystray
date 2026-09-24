@@ -1,0 +1,41 @@
+image: golang:1.25
+
+stages:
+  - verify
+  - build
+
+variables:
+  GOPATH: "$CI_PROJECT_DIR/.go"
+  GOMODCACHE: "$CI_PROJECT_DIR/.go/pkg/mod"
+
+cache:
+  key:
+    files:
+      - go.mod
+      - go.sum
+  paths:
+    - .go/pkg/mod/
+    - .go/bin/
+
+verify:
+  stage: verify
+  script:
+    - go test ./internal/monitor
+    - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
+
+build:windows:
+  stage: build
+  parallel:
+    matrix:
+      - GOARCH: amd64
+        OUTPUT: mlcsshtrayagent-windows-amd64.exe
+      - GOARCH: arm64
+        OUTPUT: mlcsshtrayagent-windows-arm64.exe
+  script:
+    - mkdir -p dist
+    - GOOS=windows GOARCH=$GOARCH CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o "dist/$OUTPUT" ./cmd/mlcsshtrayagent
+  artifacts:
+    name: "mlcsshtrayagent-$CI_COMMIT_SHORT_SHA-$GOARCH"
+    paths:
+      - dist/*.exe
+    expire_in: 30 days

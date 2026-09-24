@@ -1,0 +1,36 @@
+version: '3'
+
+tasks:
+  default:
+    desc: Run the test suite
+    cmds:
+      - task: test
+
+  fmt:
+    desc: Format Go source files
+    cmds:
+      - gofmt -w cmd internal
+
+  test:
+    desc: Run unit tests
+    cmds:
+      - go test ./internal/monitor
+
+  lint:
+    desc: Run static checks
+    cmds:
+      - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
+
+  build:
+    desc: Build the Windows tray executable
+    deps: [lint]
+    cmds:
+      - mkdir -p bin
+      - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o bin/mlcsshtrayagent.exe ./cmd/mlcsshtrayagent
+
+  build:windows:arm64:
+    desc: Build the Windows ARM64 tray executable
+    deps: [lint]
+    cmds:
+      - mkdir -p bin
+      - GOOS=windows GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o bin/mlcsshtrayagent-arm64.exe ./cmd/mlcsshtrayagent

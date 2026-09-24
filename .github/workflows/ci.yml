@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+          cache: true
+      - run: go test ./internal/monitor
+      - run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
+
+  build:
+    needs: verify
+    strategy:
+      matrix:
+        include:
+          - goarch: amd64
+            output: mlcsshtrayagent-windows-amd64.exe
+          - goarch: arm64
+            output: mlcsshtrayagent-windows-arm64.exe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+          cache: true
+      - run: mkdir -p dist
+      - run: GOOS=windows GOARCH=${{ matrix.goarch }} CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o "dist/${{ matrix.output }}" ./cmd/mlcsshtrayagent
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.output }}
+          path: dist/${{ matrix.output }}
