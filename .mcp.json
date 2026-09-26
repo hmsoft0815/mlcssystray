@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mlc-dochub": {
+      "args": [
+        "-project-id",
+        "mlcssystray"
+      ],
+      "command": "dochub-mcp"
+    }
+  }
+}
