@@ -43,7 +43,7 @@ be delegated to different computers and sessions can outlive the person who
 started them. The tray agent provides a small, immediate view of who is
 currently connected and where.
 
-Also check out [MLC Terminal](https://mlcgo.eu/products/terminal), a cross-platform,
+Also check out [MLC Terminal](https://mlcgo.eu/products/mlcterm), a cross-platform,
 multi-window SSH terminal.
 
 ## Status
