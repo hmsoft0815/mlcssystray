@@ -1,8 +1,10 @@
 # MLC SSH Tray Agent
 
+<img src="assets/ssh-tray-agent-hero.jpg" alt="MLC SSH Tray Agent showing active remote sessions" width="720">
+
 Small Windows tray monitor for active SSH, RDP, and optional WSL sessions.
 
-Current version: `0.1.0`.
+Current version: `0.1.1`.
 
 Licensed under the MIT License. Copyright Michael Lechner.
 
@@ -40,6 +42,9 @@ especially useful in environments with autonomous LLM agents, where tasks may
 be delegated to different computers and sessions can outlive the person who
 started them. The tray agent provides a small, immediate view of who is
 currently connected and where.
+
+Also check out [MLC Terminal](https://mlcgo.eu/products/terminal), a cross-platform,
+multi-window SSH terminal.
 
 ## Status
 
