@@ -16,6 +16,9 @@ The recommended option is the per-user installer from the project's
 `mlcsshtrayagent-setup-arm64.exe` for Windows on ARM. The installer requires no
 administrator rights and offers an optional start-at-sign-in setting.
 
+The installer is currently not code-signed, so Windows may show a Microsoft
+Defender SmartScreen warning when you run it.
+
 Portable builds are also available as `mlcsshtrayagent-windows-amd64.exe` and
 `mlcsshtrayagent-windows-arm64.exe`. They need no installation; create a
 shortcut in the Windows startup folder (`shell:startup`) for automatic startup.
