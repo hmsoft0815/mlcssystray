@@ -89,3 +89,10 @@ GitLab CI runs the monitor tests and Windows vet, then publishes Windows
 amd64 and arm64 executables as pipeline artifacts.
 
 The monitor does not require administrator rights for the common case. Windows may hide ownership details for sessions belonging to another security context; the tray then reports the session as unknown rather than failing the whole monitor.
+
+## Who is "Claude" in the commits?
+
+Some commits in this repository are co-authored by Claude, Anthropic's AI
+model. It helps write code, keeps our documentation and backlog up to date and
+digs through failing builds — every change is reviewed before it is merged.
+We don't hide it: [how we work with Claude](https://mlcgo.eu/ai/en.html).
