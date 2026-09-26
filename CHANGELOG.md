@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Embed the application icon and version details in the executable.
+- Offer to start the agent right after installation.
+- Show the installer in German on German Windows.
+
 ## 0.1.2 - 2026-09-26
 
 - Add per-user x64 and ARM64 installers with optional sign-in startup.

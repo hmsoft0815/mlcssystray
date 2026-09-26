@@ -39,6 +39,13 @@ jobs:
           New-Item -ItemType Directory -Force -Path $dist | Out-Null
           $exe = Join-Path $dist "mlcsshtrayagent-windows-$goarch.exe"
 
+          go run github.com/tc-hib/go-winres@v0.3.3 simply --arch $goarch --out cmd/mlcsshtrayagent/rsrc `
+            --icon internal/app/assets/app.ico --manifest none `
+            --product-version $version --file-version $version `
+            --product-name 'MLC SSH Tray Agent' --file-description 'MLC SSH Tray Agent' `
+            --copyright 'Copyright Michael Lechner' --original-filename mlcsshtrayagent.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
           $env:GOOS = 'windows'
           $env:GOARCH = $goarch
           $env:CGO_ENABLED = '0'

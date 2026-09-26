@@ -21,16 +21,24 @@ tasks:
     cmds:
       - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...
 
+  winres:
+    desc: Embed icon and version info into the Windows executable (rsrc_windows_*.syso)
+    vars:
+      VERSION:
+        sh: sed -n 's/^var Version = "\(.*\)"$/\1/p' internal/app/version.go
+    cmds:
+      - go run github.com/tc-hib/go-winres@v0.3.3 simply --arch amd64,arm64 --out cmd/mlcsshtrayagent/rsrc --icon internal/app/assets/app.ico --manifest none --product-version {{.VERSION}} --file-version {{.VERSION}} --product-name "MLC SSH Tray Agent" --file-description "MLC SSH Tray Agent" --copyright "Copyright Michael Lechner" --original-filename mlcsshtrayagent.exe
+
   build:
     desc: Build the Windows tray executable
-    deps: [lint]
+    deps: [lint, winres]
     cmds:
       - mkdir -p bin
       - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o bin/mlcsshtrayagent.exe ./cmd/mlcsshtrayagent
 
   build:windows:arm64:
     desc: Build the Windows ARM64 tray executable
-    deps: [lint]
+    deps: [lint, winres]
     cmds:
       - mkdir -p bin
       - GOOS=windows GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui" -o bin/mlcsshtrayagent-arm64.exe ./cmd/mlcsshtrayagent
