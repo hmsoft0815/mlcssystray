@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.3 - 2026-09-26
 
 - Embed the application icon and version details in the executable.
 - Offer to start the agent right after installation.

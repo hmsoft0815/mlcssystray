@@ -4,7 +4,7 @@
 
 Small Windows tray monitor for active SSH, RDP, and optional WSL sessions.
 
-Current version: `0.1.2`.
+Current version: `0.1.3`.
 
 Licensed under the MIT License. Copyright Michael Lechner.
 
