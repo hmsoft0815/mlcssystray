@@ -4,24 +4,21 @@
 
 Small Windows tray monitor for active SSH, RDP, and optional WSL sessions.
 
-Current version: `0.1.1`.
+Current version: `0.1.2`.
 
 Licensed under the MIT License. Copyright Michael Lechner.
 
 ## Installation
 
-The application is a portable Windows tray executable; no installer or
-administrator rights are required for the common case.
+The recommended option is the per-user installer from the project's
+[GitHub Releases](https://github.com/hmsoft0815/mlcssystray/releases). Choose
+`mlcsshtrayagent-setup-x64.exe` for regular 64-bit Windows or
+`mlcsshtrayagent-setup-arm64.exe` for Windows on ARM. The installer requires no
+administrator rights and offers an optional start-at-sign-in setting.
 
-1. Download the Windows executable from the GitLab pipeline artifacts or from
-  the project's [GitHub Releases](https://github.com/hmsoft0815/mlcssystray/releases).
-2. Extract `mlcsshtrayagent-windows-amd64.exe` for regular 64-bit Windows, or
-  `mlcsshtrayagent-windows-arm64.exe` for Windows on ARM.
-3. Start the executable. It runs in the notification area.
-
-For automatic startup, create a shortcut to the executable in the Windows
-startup folder (`shell:startup`). To remove the application, close it from the
-tray menu and delete the executable.
+Portable builds are also available as `mlcsshtrayagent-windows-amd64.exe` and
+`mlcsshtrayagent-windows-arm64.exe`. They need no installation; create a
+shortcut in the Windows startup folder (`shell:startup`) for automatic startup.
 
 ## Usage
 

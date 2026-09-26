@@ -9,24 +9,67 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
     strategy:
       matrix:
         include:
           - goarch: amd64
-            output: mlcsshtrayagent-windows-amd64.exe
+            installer_arch: x64
+            allowed_architectures: x64compatible
+            install_mode_architecture: x64
           - goarch: arm64
-            output: mlcsshtrayagent-windows-arm64.exe
+            installer_arch: arm64
+            allowed_architectures: arm64
+            install_mode_architecture: arm64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.25.x"
           cache: true
-      - run: mkdir -p dist
-      - run: VERSION="${GITHUB_REF_NAME#v}"; GOOS=windows GOARCH=${{ matrix.goarch }} CGO_ENABLED=0 go build -trimpath -ldflags "-H=windowsgui -X github.com/mlc911/mlcsshtrayagent/internal/app.Version=$VERSION" -o "dist/${{ matrix.output }}" ./cmd/mlcsshtrayagent
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+      - name: Build executable and installer
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME.Substring(1)
+          $goarch = '${{ matrix.goarch }}'
+          $dist = Join-Path $PWD.Path 'dist'
+          New-Item -ItemType Directory -Force -Path $dist | Out-Null
+          $exe = Join-Path $dist "mlcsshtrayagent-windows-$goarch.exe"
+
+          $env:GOOS = 'windows'
+          $env:GOARCH = $goarch
+          $env:CGO_ENABLED = '0'
+          go build -trimpath -ldflags "-H=windowsgui -X github.com/mlc911/mlcsshtrayagent/internal/app.Version=$version" -o $exe ./cmd/mlcsshtrayagent
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc `
+            "/DAppVersion=$version" `
+            "/DInstallerArch=${{ matrix.installer_arch }}" `
+            "/DAllowedArchitectures=${{ matrix.allowed_architectures }}" `
+            "/DInstallModeArchitecture=${{ matrix.install_mode_architecture }}" `
+            "/DSourceExe=$exe" `
+            "/DOutputDir=$dist" `
+            'installer\mlcsshtrayagent.iss'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.goarch }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/${{ matrix.output }}
+          files: dist/*
           generate_release_notes: true

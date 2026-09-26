@@ -29,6 +29,12 @@ func New(provider monitor.Provider) *App {
 }
 
 func (a *App) Run() {
+	release, acquired, err := acquireSingleInstance()
+	if err != nil || !acquired {
+		return
+	}
+	defer release()
+
 	enableNativeDarkMode()
 	systray.Run(a.onReady, func() {})
 }
