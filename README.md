@@ -66,6 +66,11 @@ must not be a runtime dependency for the Windows build.
 
 ## Development
 
+> **Clone without `--recursive`.** The repository references a `.mlcai`
+> submodule that lives on an internal server and holds the project's internal
+> documentation. It is not needed to build or run anything here, and
+> `git clone --recursive` fails without access to that server.
+
 Requirements:
 
 - Go 1.25+
