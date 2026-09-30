@@ -3,3 +3,6 @@ bin/
 .idea/
 .vscode/
 *.syso
+
+# lokale MCP-Konfiguration (dochub-cli agent-rules)
+.mcp.json
